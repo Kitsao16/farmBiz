@@ -1,0 +1,27 @@
+# Python
+__pycache__/
+*.py[cod]
+*.so
+
+# Django
+db.sqlite3
+*.log
+debug.log
+*.pot
+*.pyc
+
+# Environments
+venv/
+.env
+*.env
+
+# OS/Editor
+.DS_Store
+*.swp
+*.swo
+.idea/
+.vscode/
+
+# Secret scripts (optional)
+generate_secret_key.py
+
