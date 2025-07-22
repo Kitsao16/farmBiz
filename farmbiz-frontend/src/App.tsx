@@ -1,35 +1,58 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { Provider } from 'react-redux';
+import { store } from './redux/store';
+import Layout from './components/Layout/Layout';
+import ProtectedRoute from './components/Auth/ProtectedRoute';
+import Login from './pages/Login';
+import Register from './pages/Register';
+import Home from './pages/Home';
+import Businesses from './pages/Businesses';
+import BusinessDetail from './pages/BusinessDetail';
+import Activities from './pages/Activities';
+import FarmerDashboard from './pages/FarmerDashboard';
+import BusinessDashboard from './pages/BusinessDashboard';
 
-function App() {
-  const [count, setCount] = useState(0)
-
+const App: React.FC = () => {
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+    <Provider store={store}>
+      <Router>
+        <Routes>
+          {/* Public routes */}
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          
+          {/* Protected routes with layout */}
+          <Route path="/" element={<Layout />}>
+            <Route index element={<Home />} />
+            <Route path="businesses" element={<Businesses />} />
+            <Route path="businesses/:id" element={<BusinessDetail />} />
+            <Route path="activities" element={<Activities />} />
+            
+            {/* Farmer-specific routes */}
+            <Route 
+              path="farmer-dashboard" 
+              element={
+                <ProtectedRoute requiredUserType="farmer">
+                  <FarmerDashboard />
+                </ProtectedRoute>
+              } 
+            />
+            
+            {/* Business owner-specific routes */}
+            <Route 
+              path="business-dashboard" 
+              element={
+                <ProtectedRoute requiredUserType="business_owner">
+                  <BusinessDashboard />
+                </ProtectedRoute>
+              } 
+            />
+          </Route>
+        </Routes>
+      </Router>
+    </Provider>
+  );
+};
 
-export default App
+export default App;
